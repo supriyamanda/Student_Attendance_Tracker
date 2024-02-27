@@ -1,0 +1,136 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Header Styles */
+header {
+    background-color: #b4bfc7; 
+    color: rgb(57, 33, 33);
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Main Content Styles */
+main {
+    margin: 20px;
+    text-align: center;
+}
+
+/* Courses List Styles */
+.courses-list {
+    margin: 0 auto;
+    width: 60%;
+    text-align: left;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); 
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-blue {
+    background-color: #3498db; 
+    color: white; 
+    padding: 10px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+}
+
+.btn-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+#enrolled-courses {
+    list-style: none;
+    padding: 0;
+}
+
+#enrolled-courses li {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+/* Chart Container Styles */
+.chart-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #b4bfc7;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Student Details Styles */
+.student-details {
+    text-align: right;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 90%;
+}
+
+.student-details h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.student-details p {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+/* Adjustments to other elements */
+.courses-list {
+    width: 40%;
+    margin-left: 20px;
+    text-align: left;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+}
+
+.chart-container {
+    width: 40%;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+main {
+    margin: 20px;
+    text-align: center;
+}
+
+
+/* Adjustments to Footer */
+footer {
+    position: static;
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Page</title>
+    <link rel="stylesheet" href="attendancepagestyle.css">
+    <link rel="stylesheet" href="transitionstyles.css">
+    <style>
+        body {
+            background-color: #f2f2f2; 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        .panel {
+            background-color: #fff;
+            padding: 20px; 
+            margin: 20px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+
+        h1 {
+            margin-top: 0; 
+        }
+        .check-all-label {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ATTENDANCE FOR COURSE</h1>
+        <h2 id="course-number"><i>Course Number: </i></h2>
+        <button class="logout" onclick="logout()" style="position: absolute; top: 20px; right: 20px; background-color: #007BFF; color: #fff;border: none;
+        border-radius: 5px; padding: 10px 20px; cursor: pointer;transition: background-color 0.2s;font-size: 16px">Logout</button>
+    </header>
+   
+    <main>
+        <div class="panel">
+            <h2 id="mark-attendance">Student-Details</h2>
+            <form id="attendance-form"> 
+                <div class="students-list">
+                    <!-- Students enrolled in the course will be displayed here -->
+                </div>
+                
+                <div class="attendance-list">
+                    <!-- Attendance checkboxes will be generated here -->
+                </div>
+            
+                <button id="submit-attendance" type="submit" style="background-color: #007BFF; color: #fff;border: none;
+                border-radius: 5px; padding: 10px 20px; cursor: pointer;transition: background-color 0.2s;font-size: 16px">Submit Attendance</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Student Attendance Tracker</p>
+    </footer>
+
+    <script>
+        function logout() {
+            // Redirect to the login page
+            window.location.href = 'loginpage.html'; 
+        }
+        // Fetch students for the selected course using JavaScript
+        const urlParams = new URLSearchParams(window.location.search);
+        const course_id = urlParams.get('course_id');
+
+        fetch(`attendance_details.php?course_id=${course_id}`)
+            .then(response => response.json())
+            .then(async studentData => {
+                const studentsList = document.querySelector('.students-list');
+                const attendanceForm = document.getElementById('attendance-form');
+                const attendanceList = document.querySelector('.attendance-list');
+
+                if (studentData && studentData.studentIds && Array.isArray(studentData.studentIds)) {
+                    for (const studentId of studentData.studentIds) {
+                        try {
+                            const studentInfoResponse = await fetch(`student_details.php?studentid=${studentId}`);
+                            const studentInfo = await studentInfoResponse.json();
+
+                            const studentName = `${studentInfo.firstname} ${studentInfo.lastname}`;
+                            const studentEntry = document.createElement('div');
+                            const studentFullName = document.createElement('span');
+                            const studentIDText = document.createElement('span');
+
+                            studentFullName.textContent = studentName;
+                            studentIDText.textContent = `: ${studentId}`;
+                            studentIDText.classList.add('student-id');
+
+                            const studentCheckbox = document.createElement('input');
+                            studentCheckbox.type = 'checkbox';
+                            studentCheckbox.id = `attendance_${studentId}`;
+                            studentCheckbox.name = 'attendance[]';
+                            studentCheckbox.value = studentId;
+
+                            const studentLabel = document.createElement('label');
+                            studentLabel.htmlFor = `attendance_${studentId}`;
+                            studentLabel.appendChild(studentFullName);
+                            studentLabel.appendChild(studentIDText);
+
+                            studentEntry.appendChild(studentCheckbox);
+                            studentEntry.appendChild(studentLabel);
+
+                            studentsList.appendChild(studentEntry);
+                        } catch (error) {
+                            console.error('Error fetching student details:', error);
+                        }
+                    }
+                } else {
+                    console.error('No student data found for the course.');
+                }
+
+                // Check all functionality
+                const checkAllCheckbox = document.createElement('input');
+                checkAllCheckbox.type = 'checkbox';
+                checkAllCheckbox.id = 'check-all';
+                checkAllCheckbox.addEventListener('change', function () {
+                    const attendanceCheckboxes = document.querySelectorAll('.students-list input[type="checkbox"]');
+                    attendanceCheckboxes.forEach(checkbox => {
+                        checkbox.checked = checkAllCheckbox.checked;
+                    });
+                });
+
+                const checkAllLabel = document.createElement('label');
+                checkAllLabel.htmlFor = 'check-all';
+                checkAllLabel.textContent = 'Check All';
+                checkAllLabel.classList.add('check-all-label');
+
+                studentsList.appendChild(checkAllCheckbox);
+                studentsList.appendChild(checkAllLabel);
+
+                // Handle form submission to capture attendance
+                attendanceForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(this);
+                    const selectedStudents = formData.getAll('attendance[]');
+                    const currentDate = new Date().toISOString().slice(0, 10);
+
+                    const allStudents = Array.from(document.querySelectorAll('.students-list input[type="checkbox"]'));
+                    const allStudentIds = allStudents.map(student => student.value);
+
+                    const studentsAttendanceStatus = allStudentIds.reduce((attendanceStatus, studentId) => {
+                        const status = selectedStudents.includes(studentId) ? 'Yes' : 'No';
+                        attendanceStatus[studentId] = status;
+                        return attendanceStatus;
+                    }, {});
+                    const course_id = urlParams.get('course_id');
+
+                    fetch('attendance_tracking.php', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            course_id: course_id,
+                            date: currentDate,
+                            students: studentsAttendanceStatus
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Attendance submitted successfully!');
+                            // Redirect to secondpage.html on successful submission
+                            window.location.href = 'secondpage.html';
+                        } else {
+                            console.error('Failed to submit attendance');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            })
+            .catch(error => console.error('Error fetching attendance details:', error));
+        document.getElementById('course-number').textContent += course_id;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.remove('transition'); // Remove the 'transition' class on page load
+        });
+    </script>
+</body>
+</html>

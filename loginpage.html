@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="loginpagestyle.css">
+    <link rel="stylesheet" href="transitionstyles.css">
+</head>
+<body>
+    <button class="signup-button" onclick="openTab(event, 'signup')">Signup</button>
+
+    <div class="container">
+        <div class="login-box">
+            <header>
+                <h2>Login</h2>  
+            </header>
+            <nav class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'student')">Student</button>
+                <button class="tablinks" onclick="openTab(event, 'admin')">Admin</button>
+            </nav>
+            <main>
+                <div id="student" class="tabcontent">
+                    <form action="student_login.php" method="POST" name="studentLoginForm">
+                        <label for="student_id">Student User ID</label>
+                        <input type="text" id="student_id" name="student_id" pattern="\d{8}" placeholder="Enter Your 8 digit id" required>
+                        <label for="student_password">Password</label>
+                        <input type="password" id="student_password" name="student_password" placeholder="Enter Your Password" required>
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+                <div id="admin" class="tabcontent">
+                    <form action="admin_login.php" method="POST" name="adminLoginForm">
+                        <label for="admin_id">Admin ID</label>
+                        <input type="text" id="admin_id" name="admin_id" pattern="\d{8}" placeholder="Enter Your 8 digit id" required>
+                        <label for="admin_password">Password</label>
+                        <input type="password" id="admin_password" name="admin_password" placeholder="Enter Your Password" required>
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+                <div id="signup" class="tabcontent">
+                    <form action="signup.php" method="POST" name="signupForm">
+                        <br>
+                        <label for="signup_user_type">Choose User Type:</label>
+                        <select id="signup_user_type" name="signup_user_type" style="width: 50%; padding: 12px; border: 1px solid #c6a6a6; border-radius: 5px; font-size: 16px; background-color: #fff; color: #333; cursor: pointer;">
+                            <option value="student">Student</option>
+                            <option value="admin">Admin</option>
+                        </select>                        
+                        <br><br>
+                        <label for="signup_student_id">Student/Admin ID</label>
+                        <input type="text" id="signup_student_id" name="signup_student_id" pattern="\d{8}" placeholder="Enter Your 8 digit id" required>
+                        <label for="signup_username">Username</label>
+                        <input type="text" id="signup_username" name="signup_username" placeholder="Preffered Username" required>
+                        <label for="signup_password">Password</label>
+                        <input type="password" id="signup_password" name="signup_password" placeholder="Enter Your Password" required>
+                        <div id="password-strength">
+                            <h4>Password Strength</h4>
+                            <ul>
+                                <li id="length">At least 8 characters</li>
+                                <li id="capital">At least 1 capital letter</li>
+                                <li id="small">At least 1 small letter</li>
+                                <li id="number">At least 1 number</li>
+                                <li id="special">At least 1 special character</li>
+                            </ul>
+                        </div>
+                        <button type="submit">Signup</button>
+                    </form>
+                </div>
+            </main>
+            <br>
+            <a href="forgot_password.html">Forgot Password?</a>
+        </div>
+    </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        const passwordInput = document.getElementById('signup_password');   
+        passwordInput.addEventListener('input', function () {
+            const password = passwordInput.value;
+            const lengthCheck = password.length >= 8;
+            const capitalCheck = /[A-Z]/.test(password);
+            const smallCheck = /[a-z]/.test(password);
+            const numberCheck = /[0-9]/.test(password);
+            const specialCheck = /[!@#$%^&*()_+{}":<>?]/.test(password);
+
+            document.getElementById('length').style.textDecoration = lengthCheck ? 'line-through' : 'none';
+            document.getElementById('capital').style.textDecoration = capitalCheck ? 'line-through' : 'none';
+            document.getElementById('small').style.textDecoration = smallCheck ? 'line-through' : 'none';
+            document.getElementById('number').style.textDecoration = numberCheck ? 'line-through' : 'none';
+            document.getElementById('special').style.textDecoration = specialCheck ? 'line-through' : 'none';
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.remove('transition'); // Remove the 'transition' class on page load
+        });
+    </script>
+</body>
+</html>

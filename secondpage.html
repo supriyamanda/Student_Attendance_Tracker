@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="secondpagestyle.css">
+    <link rel="stylesheet" href="transition_styles.css">
+</head>
+
+<body>
+    <header class="header-container">
+        <div class="header-content">
+            <h1><b>WELCOME TO STUDENT TRACKER</b></h1>
+            <nav>
+                <ul>
+                    <li><a href="reporting_page.php">REPORT</a></li>
+                </ul>
+            </nav>
+            <button class="logout" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="main-container">
+            <div class="courses-column">
+                <h2>Your Courses</h2>
+                <ul class="your-courses courses">
+                    <!-- Courses taught by the admin will be populated here via JavaScript -->
+                </ul>
+            </div>
+
+            <div class="courses-column">
+                <h2>All Other Courses</h2>
+                <ul class="all-courses courses">
+                    <!-- All courses will be populated here via JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-container">
+        <p>&copy; 2023 Student Attendance Tracker</p>
+    </footer>
+
+    <script>
+        function logout() {
+            // Redirect to the login page
+            window.location.href = 'loginpage.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('courselist.php')
+                .then(response => response.json())
+                .then(data => {
+                    const allCoursesList = document.querySelector('.all-courses');
+                    const yourCoursesList = document.querySelector('.your-courses');
+                    const adminId = data.adminId;
+
+                    data.courses.forEach(course => {
+                        const courseItem = document.createElement('li');
+                        const courseLink = document.createElement('a');
+                        courseLink.href = `attendancepage.html?course_id=${course.course_id}`;
+                        courseLink.textContent = course.coursename;
+                        courseLink.setAttribute('data-course_id', course.course_id);
+                        courseLink.classList.add('course-link');
+
+                        courseItem.appendChild(courseLink);
+
+                        if (course.instructorid === adminId) {
+                            yourCoursesList.appendChild(courseItem);
+                        } else {
+                            allCoursesList.appendChild(courseItem);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching courses:', error));
+        });
+
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('course-link')) {
+                event.preventDefault();
+                const course_id = event.target.dataset.course_id;
+                window.location.href = `attendancepage.html?course_id=${course_id}`;
+            } else if (event.target.getAttribute('routerLink') === '/reporting') {
+                window.location.href = 'studentdetails.html'; // Replace 'studentdetails.html' with your student details page
+            }
+        });
+    </script>
+</body>
+
+</html>

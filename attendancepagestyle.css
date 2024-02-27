@@ -1,0 +1,51 @@
+/* attendancepagestyle.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #a3b4c1;
+    color: rgb(61, 46, 46);
+    text-align: center;
+    padding: 20px 0;
+}
+
+  
+header h1 {
+    margin: 0;
+}
+
+main {
+    margin: 20px;
+    text-align: center;
+}
+
+#mark-attendance {
+    margin-bottom: 20px;
+}
+
+.students-list,
+.attendance-list {
+    width: 50%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.attendance-list input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+#attendance-form {
+    text-align: center; 
+}
+
+#submit-attendance {
+    margin-top: 20px;
+    display: block;
+    margin: 20px auto 0; 
+}
